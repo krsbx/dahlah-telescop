@@ -1,0 +1,17 @@
+name: mysql-phpmyadmin
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - ${DB_PORT}:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+    networks:
+      - mysql-networks
+
+networks:
+  mysql-networks:
+    driver: bridge
