@@ -77,16 +77,3 @@ export const USER_ROLES = [
     title: "ADMIN",
   },
 ];
-
-// export const USER_ROLE = [
-//   {
-//     value: "user",
-//     title: "User",
-//   },
-//   {
-//     value: "admin",
-//     title: "Admin",
-//   },
-//   // USER: "user",
-//   // ADMIN: "admin",
-// ];

@@ -1,5 +1,7 @@
 const _ = require('lodash');
 const { asyncMw } = require('express-asyncmw');
+const dayjs = require('dayjs');
+const { Op } = require('sequelize');
 const { Borrowing } = require('../models');
 const {
   createBorrowingSchema,
@@ -91,7 +93,16 @@ class BorrowingController {
         ? +req.query.page
         : 1;
     const offset = page > 0 ? limit * (page - 1) : 0;
-    const where = req.query.userId ? { userId: +req.query.userId } : undefined;
+    const where = req.query.userId ? { userId: +req.query.userId } : {};
+
+    if (!req.auth || req.auth.role !== USER_ROLE.ADMIN) {
+      where.borrowingTime = {
+        [Op.gte]: dayjs().startOf('day'),
+      };
+      where.status = {
+        [Op.eq]: BORROWING_STATUS.APPROVED,
+      };
+    }
 
     const borrowings = await Borrowing.findAndCountAll({
       where,
