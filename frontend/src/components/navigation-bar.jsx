@@ -71,6 +71,8 @@ function AvatarProfile() {
  * @param {Parameters<typeof Stack>[0]} props
  */
 function RightSide(props) {
+  const { token, auth } = useAuthStore();
+
   return (
     <Stack
       direction={'row'}
@@ -80,7 +82,7 @@ function RightSide(props) {
       {...props}
     >
       <Link to="/">Beranda</Link>
-      <Link to="/borrows">Peminjaman</Link>
+      {token && auth ? <Link to="/borrows">Peminjaman</Link> : null}
       <Link to="/borrows/schedule">Jadwal</Link>
       <AvatarProfile />
     </Stack>
@@ -88,9 +90,7 @@ function RightSide(props) {
 }
 
 function NavigationBar() {
-  const { token, removeToken } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
-  const navigation = useNavigate();
 
   const onToggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
