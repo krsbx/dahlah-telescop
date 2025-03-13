@@ -4,6 +4,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Grid,
   GridItem,
   Input,
@@ -116,22 +117,26 @@ function BorrowTelescope() {
     [setValue]
   );
 
-  const onSubmit = useCallback(async (data) => {
-    const [{ url: proposalUrl }, { url: introductoryUrl }] = await Promise.all([
-      uploadFile(data.proposal[0]),
-      uploadFile(data.introductory[0]),
-    ]);
+  const onSubmit = useCallback(
+    async (data) => {
+      const [{ url: proposalUrl }, { url: introductoryUrl }] =
+        await Promise.all([
+          uploadFile(data.proposal[0]),
+          uploadFile(data.introductory[0]),
+        ]);
 
-    data.proposalUrl = `${import.meta.env.VITE_API_BASE_URL}${proposalUrl}`;
-    data.introductoryUrl = `${import.meta.env.VITE_API_BASE_URL}${introductoryUrl}`;
+      data.proposalUrl = `${import.meta.env.VITE_API_BASE_URL}${proposalUrl}`;
+      data.introductoryUrl = `${import.meta.env.VITE_API_BASE_URL}${introductoryUrl}`;
 
-    return createBorrowing({
-      ...data,
-      userId: auth.userId,
-      proposalUrl,
-      introductoryUrl,
-    });
-  }, [auth?.userId]);
+      return createBorrowing({
+        ...data,
+        userId: auth.userId,
+        proposalUrl,
+        introductoryUrl,
+      });
+    },
+    [auth?.userId]
+  );
 
   return (
     <MainLayout isProtected>
@@ -147,34 +152,43 @@ function BorrowTelescope() {
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4} w={'100%'} px={2}>
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.name}>
               <FormLabel>Nama Peminjaman</FormLabel>
               <Input
                 placeholder="Masukkan Nama Peminjam"
                 {...register('name')}
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.name?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.email}>
               <FormLabel>Email</FormLabel>
               <Input
                 placeholder="Masukkan Email"
                 {...register('email')}
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.email?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.nimNip}>
               <FormLabel>NIM/NIP</FormLabel>
               <Input
                 placeholder="Masukkan NIM/NIP"
                 {...register('nimNip')}
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.nimNip?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.occupation}>
               <FormLabel>Status/Pekerjaan</FormLabel>
               <Select
                 {...register('occupation')}
@@ -187,9 +201,15 @@ function BorrowTelescope() {
                   </option>
                 ))}
               </Select>
+              <FormErrorMessage>
+                {formState.errors.occupation?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl
+              isRequired
+              isInvalid={!!formState.errors.observationObject}
+            >
               <FormLabel>Objek Penelitian</FormLabel>
               <Select
                 {...register('observationObject')}
@@ -202,9 +222,15 @@ function BorrowTelescope() {
                   </option>
                 ))}
               </Select>
+              <FormErrorMessage>
+                {formState.errors.observationObject?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl
+              isRequired
+              isInvalid={!!formState.errors.rightAscescion}
+            >
               <FormLabel>Asensio Rekta / Right Ascension</FormLabel>
               <Input
                 {...register('rightAscescion')}
@@ -212,9 +238,12 @@ function BorrowTelescope() {
                 type="number"
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.rightAscescion?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.declination}>
               <FormLabel>Deklinasi / Declination</FormLabel>
               <Input
                 {...register('declination')}
@@ -222,18 +251,24 @@ function BorrowTelescope() {
                 type="number"
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.declination?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.objectType}>
               <FormLabel>Jenis Objek Pengamatan</FormLabel>
               <Input
                 {...register('objectType')}
                 placeholder="Masukkan Jenis Objek Pengamatan"
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.objectType?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!formState.errors.magnitude}>
               <FormLabel>Magnitude</FormLabel>
               <Input
                 {...register('magnitude')}
@@ -241,9 +276,15 @@ function BorrowTelescope() {
                 type="number"
                 disabled={formState.isSubmitting}
               />
+              <FormErrorMessage>
+                {formState.errors.magnitude?.message}
+              </FormErrorMessage>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl
+              isRequired
+              isInvalid={!!formState.errors.telescopeType}
+            >
               <FormLabel>Teleskop / Telescope</FormLabel>
               <Select
                 {...register('telescopeType')}
@@ -256,11 +297,17 @@ function BorrowTelescope() {
                   </option>
                 ))}
               </Select>
+              <FormErrorMessage>
+                {formState.errors.telescopeType?.message}
+              </FormErrorMessage>
             </FormControl>
 
             <Grid templateColumns={'repeat(2, 1fr)'} columnGap={4}>
               <GridItem>
-                <FormControl isRequired>
+                <FormControl
+                  isRequired
+                  isInvalid={!!formState.errors.borrowingTime}
+                >
                   <FormLabel>Waktu Peminjaman</FormLabel>
                   <Input
                     {...register('borrowingTime')}
@@ -268,11 +315,17 @@ function BorrowTelescope() {
                     type="datetime-local"
                     disabled={formState.isSubmitting}
                   />
+                  <FormErrorMessage>
+                    {formState.errors.borrowingTime?.message}
+                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
 
               <GridItem>
-                <FormControl isRequired>
+                <FormControl
+                  isRequired
+                  isInvalid={!!formState.errors.borrowingTimeUntil}
+                >
                   <FormLabel>Waktu Selesai Peminjaman</FormLabel>
                   <Input
                     {...register('borrowingTimeUntil')}
@@ -280,13 +333,16 @@ function BorrowTelescope() {
                     type="datetime-local"
                     disabled={formState.isSubmitting}
                   />
+                  <FormErrorMessage>
+                    {formState.errors.borrowingTimeUntil?.message}
+                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
             </Grid>
 
             <Grid templateColumns={'repeat(2, 1fr)'} columnGap={4}>
               <GridItem>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={!!formState.errors.proposal}>
                   <FormLabel>Upload Proposal</FormLabel>
                   <FileInput
                     value={values.proposal?.[0]}
@@ -295,11 +351,17 @@ function BorrowTelescope() {
                     name="proposal"
                     disabled={formState.isSubmitting}
                   />
+                  <FormErrorMessage>
+                    {formState.errors.proposal?.message}
+                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
 
               <GridItem>
-                <FormControl isRequired>
+                <FormControl
+                  isRequired
+                  isInvalid={!!formState.errors.introductory}
+                >
                   <FormLabel>Upload Surat Pengantar</FormLabel>
                   <FileInput
                     value={values.introductory?.[0]}
@@ -308,6 +370,9 @@ function BorrowTelescope() {
                     name="introductory"
                     disabled={formState.isSubmitting}
                   />
+                  <FormErrorMessage>
+                    {formState.errors.introductory?.message}
+                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
             </Grid>

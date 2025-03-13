@@ -70,10 +70,10 @@ export const USER_ROLE = {
 export const USER_ROLES = [
   {
     value: "user",
-    title: "USER",
+    title: "User",
   },
   {
     value: "admin",
-    title: "ADMIN",
+    title: "Admin",
   },
 ];

@@ -17,6 +17,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { Link } from './link';
+import Auth from './navigation-bar/auth';
 
 function AvatarProfile() {
   const { token, removeToken } = useAuthStore();
@@ -70,12 +71,12 @@ function AvatarProfile() {
 /**
  * @param {Parameters<typeof Stack>[0]} props
  */
-function RightSide(props) {
+function RightSide({ children, ...props }) {
   const { token, auth } = useAuthStore();
 
   return (
     <Stack
-      direction={'row'}
+      direction={{ base: 'column', md: 'row' }}
       alignItems={'center'}
       h={'100%'}
       gap={3}
@@ -84,6 +85,7 @@ function RightSide(props) {
       <Link to="/">Beranda</Link>
       {token && auth ? <Link to="/borrows">Peminjaman</Link> : null}
       <Link to="/borrows/schedule">Jadwal</Link>
+      {children}
       <AvatarProfile />
     </Stack>
   );
@@ -103,7 +105,9 @@ function NavigationBar() {
         p={4}
       >
         <Image w={12} src="/itera.svg" />
-        <RightSide display={{ base: 'none', md: 'flex' }} />
+        <RightSide display={{ base: 'none', md: 'flex' }}>
+          <Auth />
+        </RightSide>
         <Button
           onClick={onToggle}
           display={{ base: 'flex', md: 'none' }}
@@ -117,11 +121,12 @@ function NavigationBar() {
       <RightSide
         display={{ base: 'flex', md: 'none' }}
         alignItems={'center'}
-        direction={'column'}
         bg={'gray.500'}
         h={isOpen ? 'calc(100vh - 91px)' : 0}
         overflow={isOpen ? 'visible' : 'hidden'}
-      />
+      >
+        <Auth />
+      </RightSide>
     </Box>
   );
 }
