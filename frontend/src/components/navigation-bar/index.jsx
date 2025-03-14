@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import useAuthStore from '../store/auth';
+import useAuthStore from '../../store/auth';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoClose } from 'react-icons/io5';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -16,9 +16,9 @@ import {
   MenuList,
   Stack,
 } from '@chakra-ui/react';
-import { Link } from './link';
-import Auth from './navigation-bar/auth';
-import { USER_ROLE } from '../utils/constant';
+import { Link } from '../link';
+import Auth from './auth';
+import { USER_ROLE } from '../../utils/constant';
 
 function AvatarProfile() {
   const { token, auth, removeToken } = useAuthStore();
