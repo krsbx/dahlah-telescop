@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import store from '../store/stats';
 import axios from '../utils/axios';
 
 export const uploadFile = async (file) => {
@@ -10,7 +12,14 @@ export const uploadFile = async (file) => {
 };
 
 export const getStats = async () => {
+  const { fetchedAt } = store.getState();
+
+  if (fetchedAt && !dayjs().isAfter(fetchedAt)) return;
+
   const { data } = await axios.get('/files/stats');
+
+  store.getState().setStats(data);
+  store.getState().setFetchedAt(dayjs());
 
   return data;
 };

@@ -12,11 +12,11 @@ class Mega {
   latestFile = null;
   /** @type {string|null} */
   latestFileName = null;
-  /** @type {{timestamp: string; SKY: number; AMB:number; WIND: number; HUM: number; ADAY: number}[]|null} */
+  /** @type {Promise<{timestamp: string; SKY: number; AMB:number; WIND: number; HUM: number; ADAY: number}[]>|null} */
   latestParsed = null;
   /** @type {Map<string, Buffer>} */
   #fileCache = new Map();
-  /** @type {Map<string, {timestamp: string; SKY: number; AMB:number; WIND: number; HUM: number; ADAY: number}[]>} */
+  /** @type {Map<string, Promise<{timestamp: string; SKY: number; AMB:number; WIND: number; HUM: number; ADAY: number}[]>>} */
   #parsedCache = new Map();
 
   constructor() {}
@@ -71,7 +71,7 @@ class Mega {
     this.latestFileName = sortedFiles[0].name;
     this.latestFile = await sortedFiles[0].downloadBuffer();
     this.#cacheLatestFile();
-    this.#parseLatestFile()
+    this.#parseLatestFile();
   }
 
   listenStorage() {

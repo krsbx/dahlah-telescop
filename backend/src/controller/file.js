@@ -39,7 +39,7 @@ class FileController {
       `attachment; filename=${[fileName, 'json'].join('.')}`
     );
 
-    return res.status(200).send(mega.latestParsed);
+    return res.status(200).send(await mega.latestParsed);
   });
 }
 
