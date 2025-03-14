@@ -18,9 +18,10 @@ import {
 } from '@chakra-ui/react';
 import { Link } from './link';
 import Auth from './navigation-bar/auth';
+import { USER_ROLE } from '../utils/constant';
 
 function AvatarProfile() {
-  const { token, removeToken } = useAuthStore();
+  const { token, auth, removeToken } = useAuthStore();
 
   const navigation = useNavigate();
   const onLogout = useCallback(() => {
@@ -30,7 +31,7 @@ function AvatarProfile() {
     });
   }, [removeToken, navigation]);
 
-  if (!token) return null;
+  if (!token || !auth) return null;
 
   return (
     <Menu>
@@ -46,10 +47,14 @@ function AvatarProfile() {
         <Avatar size="md" width={10} height={10}></Avatar>
       </MenuButton>
       <MenuList alignItems={'center'} p="3" direction="ltr">
-        <RouterLink to="/profile">
-          <MenuItem color={'black'}>Profil</MenuItem>
-        </RouterLink>
-        <MenuDivider />
+        {auth?.role === USER_ROLE.ADMIN ? (
+          <>
+            <RouterLink to="/admin">
+              <MenuItem color={'black'}>Admin Panel</MenuItem>
+            </RouterLink>
+            <MenuDivider />
+          </>
+        ) : null}
         <RouterLink to="/" onClick={onLogout}>
           <MenuItem
             _hover={{ bg: 'red.600' }}

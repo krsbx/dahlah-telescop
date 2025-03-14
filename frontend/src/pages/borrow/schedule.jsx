@@ -92,7 +92,7 @@ function BorrowTelescopeSchedule() {
                   <Th textAlign={'center'}>
                     {TELESCOPE_TYPE.find(
                       (tt) => tt.value === borrowing.telescopeType
-                    ).title || borrowing.telescopeType}
+                    )?.title || borrowing.telescopeType}
                   </Th>
                   <Th textAlign={'center'}>
                     {dayjs(borrowing.borrowingDate)

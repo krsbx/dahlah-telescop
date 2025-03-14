@@ -16,14 +16,14 @@ import {
   useModal,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { signUpSchema } from '../../validations/auth';
 import { register as registerUser } from '../../api/auth';
 
 function SignUpForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState, reset } = useForm({
     defaultValues: {
       fullName: '',
       email: '',
@@ -41,6 +41,13 @@ function SignUpForm() {
     },
     [onClose]
   );
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   return (
     <React.Fragment>
