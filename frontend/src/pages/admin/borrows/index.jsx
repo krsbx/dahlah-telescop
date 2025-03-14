@@ -1,6 +1,3 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
-import AdminLayout from '../../../layout/admin-layout';
 import {
   Button,
   Flex,
@@ -15,11 +12,19 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { USER_ROLES } from '../../../utils/constant';
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import DataTable from 'react-data-table-component';
 import { IoClose } from 'react-icons/io5';
-import useBorrowingsStore from '../../../store/borrowings';
-import { deleteBorrowing, listBorrowing } from '../../../api/borrowings';
 import { useNavigate } from 'react-router-dom';
+import { deleteBorrowing, listBorrowing } from '../../../api/borrowings';
+import AdminLayout from '../../../layout/admin-layout';
+import useBorrowingsStore from '../../../store/borrowings';
+import { TELESCOPE_TYPE } from '../../../utils/constant';
+
+dayjs.extend(localizedFormat);
 
 function Borrows() {
   const navigation = useNavigate();
@@ -134,25 +139,28 @@ function Borrows() {
                 Nama Lengkap
               </Text>
             ),
-            selector: (row) => row.fullName,
+            selector: (row) => row.name,
           },
           {
             name: (
               <Text fontSize={'sm'} fontWeight={'bold'}>
-                Email
+                Teleskop
               </Text>
             ),
-            selector: (row) => row.email,
+            selector: (row) =>
+              TELESCOPE_TYPE.find((tt) => tt.value === row.telescopeType)
+                ?.title || row.telescopeType,
           },
           {
             name: (
               <Text fontSize={'sm'} fontWeight={'bold'}>
-                Role
+                Waktu
               </Text>
             ),
-            cell: (row) =>
-              USER_ROLES.find((role) => role.value === row.role)?.title ||
-              row.role,
+            selector: (row) =>
+              dayjs(row.borrowingDate)
+                .locale('id')
+                .format('dddd, DD MMMM YYYY HH:mm'),
           },
           {
             name: (

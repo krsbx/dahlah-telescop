@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const BorrowingController = require('../controller/borrowings');
-const { authMw } = require('../middleware/auth');
+const { authMw, optionalAuthMw } = require('../middleware/auth');
 const { userOrAdminMw } = require('../middleware/borrowing');
 
 const router = Router();
@@ -14,7 +14,7 @@ router.patch(
   borrowingController.update
 );
 router.get('/:borrowingId', borrowingController.find);
-router.get('/', borrowingController.list);
+router.get('/', optionalAuthMw, borrowingController.list);
 router.delete(
   '/:borrowingId',
   authMw,

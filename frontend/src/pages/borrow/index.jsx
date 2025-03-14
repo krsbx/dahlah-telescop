@@ -58,15 +58,11 @@ function BorrowTelescope() {
           uploadFile(data.introductory[0]),
         ]);
 
+      data.userId = auth.userId;
       data.proposalUrl = `${import.meta.env.VITE_API_BASE_URL}${proposalUrl}`;
       data.introductoryUrl = `${import.meta.env.VITE_API_BASE_URL}${introductoryUrl}`;
 
-      return createBorrowing({
-        ...data,
-        userId: auth.userId,
-        proposalUrl,
-        introductoryUrl,
-      });
+      return createBorrowing(data);
     },
     [auth?.userId]
   );

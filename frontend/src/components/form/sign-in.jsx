@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -7,10 +8,13 @@ import {
   Select,
   Stack,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
+import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { USER_ROLES } from '../../utils/constant';
 
 function SignInForm({ onSubmit, errors, register, formState, children }) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={4} w={'100%'} px={2}>
@@ -26,12 +30,26 @@ function SignInForm({ onSubmit, errors, register, formState, children }) {
 
         <FormControl isRequired isInvalid={!!errors.password}>
           <FormLabel>Password</FormLabel>
-          <Input
-            placeholder="Masukkan Password"
-            {...register('password')}
-            disabled={formState.isSubmitting}
-            type="password"
-          />
+          <Flex position={'relative'}>
+            <Input
+              placeholder="Masukkan Password"
+              {...register('password')}
+              disabled={formState.isSubmitting}
+              type={isPasswordVisible ? 'text' : 'password'}
+              pr={6}
+            />
+            <Button
+              variant={'none'}
+              onClick={() => setIsPasswordVisible((prev) => !prev)}
+              position={'absolute'}
+              right={0}
+              zIndex={100}
+              top={0}
+              p={1}
+            >
+              {isPasswordVisible ? <IoEyeOff /> : <IoEye />}
+            </Button>
+          </Flex>
           <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
         </FormControl>
 

@@ -20,6 +20,7 @@ import useAuthStore from '../../../store/auth';
 import useUsersStore from '../../../store/users';
 import { borrowTelescopeSchema } from '../../../validations/borrow';
 import { BORROWING_STATUS, BORROWING_STATUSES } from '../../../utils/constant';
+import { uploadFile } from '../../../api/files';
 
 function AddBorrow() {
   const navigation = useNavigate();
@@ -60,7 +61,7 @@ function AddBorrow() {
         borrowTelescopeSchema.extend({
           user: z.object({
             label: z.string(),
-            value: z.string(),
+            value: z.coerce.number(),
           }),
           status: z.enum(BORROWING_STATUSES.map((status) => status.value)),
         })
@@ -91,6 +92,15 @@ function AddBorrow() {
       if (data.user && typeof data.user === 'object') {
         data.userId = data.user.value;
       }
+
+      const [{ url: proposalUrl }, { url: introductoryUrl }] =
+        await Promise.all([
+          uploadFile(data.proposal[0]),
+          uploadFile(data.introductory[0]),
+        ]);
+
+      data.proposalUrl = `${import.meta.env.VITE_API_BASE_URL}${proposalUrl}`;
+      data.introductoryUrl = `${import.meta.env.VITE_API_BASE_URL}${introductoryUrl}`;
 
       const borrowing = await createBorrowing(data);
 
