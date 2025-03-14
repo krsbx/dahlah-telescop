@@ -1,3 +1,4 @@
+const path = require('path');
 const { asyncMw } = require('express-asyncmw');
 const mega = require('../utils/mega');
 const { fileListQuery } = require('../schemas/file');
@@ -29,13 +30,16 @@ class FileController {
   });
 
   stats = asyncMw(async (req, res) => {
-    res.setHeader('Content-Type', 'text/plain');
+    const ext = path.extname(mega.latestFileName);
+    const fileName = mega.latestFileName.replace(ext, '');
+
+    res.setHeader('Content-Type', 'application/json');
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename=${mega.latestFileName}`
+      `attachment; filename=${[fileName, 'json'].join('.')}`
     );
 
-    return res.status(200).send(mega.latestFile);
+    return res.status(200).send(mega.latestParsed);
   });
 }
 

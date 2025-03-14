@@ -3,6 +3,7 @@ const _ = require('lodash');
 const { Storage } = require('megajs');
 const { env } = require('./env');
 const Logger = require('./Logger');
+const { parseClarityIILog } = require('./parser');
 
 class Mega {
   /** @type {Storage|null} */
@@ -11,8 +12,12 @@ class Mega {
   latestFile = null;
   /** @type {string|null} */
   latestFileName = null;
+  /** @type {{timestamp: string; SKY: number; AMB:number; WIND: number; HUM: number; ADAY: number}[]|null} */
+  latestParsed = null;
   /** @type {Map<string, Buffer>} */
   #fileCache = new Map();
+  /** @type {Map<string, {timestamp: string; SKY: number; AMB:number; WIND: number; HUM: number; ADAY: number}[]>} */
+  #parsedCache = new Map();
 
   constructor() {}
 
@@ -42,13 +47,22 @@ class Mega {
     this.#cacheFile(this.latestFileName, this.latestFile);
   }
 
+  async #parseLatestFile() {
+    const logs = new TextDecoder().decode(new Uint8Array(this.latestFile));
+    const result = parseClarityIILog(logs);
+
+    this.latestParsed = result;
+    this.#parsedCache.set(this.latestFileName, result);
+    Logger.info(`File parsed: ${this.latestFileName}`);
+  }
+
   async onReady() {
     Logger.info('Mega connected!');
 
     const sortedFiles = _.sortBy(
       this.storage.files,
       (a, b) => b?.createdAt ?? 0 - (a?.createdAt ?? 0)
-    );
+    ).filter((file) => /^(\d{4}-\d{2}-\d{2})(\.txt)$/.test(file.name));
 
     if (!sortedFiles?.[0]) return;
 
@@ -57,6 +71,7 @@ class Mega {
     this.latestFileName = sortedFiles[0].name;
     this.latestFile = await sortedFiles[0].downloadBuffer();
     this.#cacheLatestFile();
+    this.#parseLatestFile()
   }
 
   listenStorage() {
@@ -73,6 +88,7 @@ class Mega {
       this.latestFileName = file.name;
       this.latestFile = await file.downloadBuffer();
       this.#cacheLatestFile();
+      this.#parseLatestFile();
     });
   }
 
