@@ -103,3 +103,26 @@ export const BORROWING_STATUSES = [
     title: 'Cancelled',
   },
 ];
+
+export const CHARTS_OPTIONS = [
+  {
+    value: 'HUM',
+    title: 'Kelembapan',
+  },
+  {
+    value: 'SKY',
+    title: 'Suhu',
+  },
+  {
+    value: 'AMB',
+    title: 'Curah Hujan',
+  },
+  {
+    value: 'WIND',
+    title: 'Kecepatan Angin',
+  },
+  {
+    value: 'ADAY',
+    title: 'Radiasi Matahari',
+  },
+];
