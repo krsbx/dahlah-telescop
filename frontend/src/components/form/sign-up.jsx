@@ -10,13 +10,14 @@ import {
 import React, { useState } from 'react';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 
-/** @param {Parameters<typeof Stack>[0]} props */
+/** @param {Parameters<typeof Stack>[0] & { isPasswordOptional?: boolean}} props */
 function SignUpForm({
   onSubmit,
   errors,
   register,
   formState,
   children,
+  isPasswordOptional,
   ...props
 }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -44,7 +45,7 @@ function SignUpForm({
           <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isRequired isInvalid={!!errors.password}>
+        <FormControl isRequired={!isPasswordOptional} isInvalid={!!errors.password}>
           <FormLabel>Password</FormLabel>
           <Flex position={'relative'}>
             <Input

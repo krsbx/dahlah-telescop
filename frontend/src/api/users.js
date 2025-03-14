@@ -52,3 +52,11 @@ export const deleteUser = async (userId) => {
 
   store.getState().deleteUser(userId);
 };
+
+export const updateUserPassword = async (userId, payload) => {
+  if (!payload.confirmPassword) {
+    payload.confirmPassword = payload.password;
+  }
+
+  await axios.post(`/users/${userId}/change-password`, payload);
+}

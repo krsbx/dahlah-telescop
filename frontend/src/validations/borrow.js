@@ -1,12 +1,14 @@
+import dayjs from 'dayjs';
 import { z } from 'zod';
-import { fileSchema } from './shared';
 import {
+  BORROWING_STATUSES,
   OBSERVATION_OBJECT,
   OCCUPATION,
   TELESCOPE_TYPE,
 } from '../utils/constant';
+import { fileSchema } from './shared';
 
-export const borrowTelescopeSchema = z.object({
+const baseBorrowTelescopeSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   occupation: z.enum(OCCUPATION.map((oc) => oc.value)),
@@ -22,3 +24,40 @@ export const borrowTelescopeSchema = z.object({
   borrowingTime: z.coerce.date(),
   borrowingTimeUntil: z.coerce.date(),
 });
+
+/**
+ * @param {z.infer<typeof baseBorrowTelescopeSchema>} data
+ * @param {z.RefinementCtx} ctx
+ * @returns
+ */
+export function borrowTelescopeRefiner(data, ctx) {
+  if (dayjs().isAfter(data.borrowingTimeUntil)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'borrowingTimeUntil must be greater than current date',
+    });
+  }
+
+  if (dayjs(data.borrowingTimeUntil).isBefore(data.borrowingTime)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'borrowingTimeUntil must be greater than borrowingTime',
+    });
+  }
+
+  return data;
+}
+
+export const borrowTelescopeSchema = baseBorrowTelescopeSchema.superRefine(
+  borrowTelescopeRefiner
+);
+
+export const createBorrowTelescopeSchema = baseBorrowTelescopeSchema
+  .extend({
+    user: z.object({
+      label: z.string(),
+      value: z.coerce.number(),
+    }),
+    status: z.enum(BORROWING_STATUSES.map((status) => status.value)),
+  })
+  .superRefine(borrowTelescopeRefiner);

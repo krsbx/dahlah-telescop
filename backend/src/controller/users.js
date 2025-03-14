@@ -111,19 +111,18 @@ class UserController {
     const body = updateUserPasswordSchema.parse(req.body);
     const newPassword = await hashText(body.password);
 
-    const [, [user]] = await User.update(
+    await User.update(
       { password: newPassword },
       {
         where: {
           userId: +req.params.userId,
         },
-        returning: true,
       }
     );
 
     return res.status(200).json({
       code: 200,
-      data: _.omit(user.dataValues, ['password']),
+      data: null,
     });
   });
 

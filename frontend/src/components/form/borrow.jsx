@@ -9,6 +9,7 @@ import {
   Select,
   Stack,
 } from '@chakra-ui/react';
+import dayjs from 'dayjs';
 import React from 'react';
 import {
   OBSERVATION_OBJECT,
@@ -163,6 +164,7 @@ function BorrowForm({
                 {...register('borrowingTime')}
                 placeholder="Pilih Waktu Peminjaman"
                 type="datetime-local"
+                min={dayjs().format('YYYY-MM-DDTHH:mm')}
                 disabled={formState.isSubmitting}
               />
               <FormErrorMessage>
@@ -178,6 +180,7 @@ function BorrowForm({
                 {...register('borrowingTimeUntil')}
                 placeholder="Pilih Waktu Peminjaman"
                 type="datetime-local"
+                min={dayjs().format('YYYY-MM-DDTHH:mm')}
                 disabled={formState.isSubmitting}
               />
               <FormErrorMessage>

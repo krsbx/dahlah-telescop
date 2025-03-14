@@ -3,11 +3,8 @@ import AdminLayout from '../../../layout/admin-layout';
 import SignUpForm from '../../../components/form/sign-up';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signUpSchema } from '../../../validations/auth';
-import { z } from 'zod';
 import { USER_ROLE, USER_ROLES } from '../../../utils/constant';
 import {
-  Box,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -17,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { createUser } from '../../../api/users';
 import { useNavigate } from 'react-router-dom';
+import { createUserSchema } from '../../../validations/user';
 
 function AddAccount() {
   const navigation = useNavigate();
@@ -28,11 +26,7 @@ function AddAccount() {
       role: USER_ROLE.USER,
     },
     mode: 'onBlur',
-    resolver: zodResolver(
-      signUpSchema.extend({
-        role: z.enum(USER_ROLES.map((role) => role.value)),
-      })
-    ),
+    resolver: zodResolver(createUserSchema),
   });
 
   const onSubmit = useCallback(

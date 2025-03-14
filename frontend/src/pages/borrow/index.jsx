@@ -1,13 +1,13 @@
 import { Flex, Text } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { borrowTelescopeSchema } from '../../validations/borrow';
-import MainLayout from '../../layout/main-layout';
-import { uploadFile } from '../../api/files';
 import { createBorrowing } from '../../api/borrowings';
-import useAuthStore from '../../store/auth';
+import { uploadFile } from '../../api/files';
 import BorrowForm from '../../components/form/borrow';
+import MainLayout from '../../layout/main-layout';
+import useAuthStore from '../../store/auth';
+import { borrowTelescopeSchema } from '../../validations/borrow';
 
 function BorrowTelescope() {
   const { auth } = useAuthStore();

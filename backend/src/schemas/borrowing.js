@@ -1,3 +1,4 @@
+const dayjs = require('dayjs');
 const { z } = require('zod');
 const {
   OCCUPATION,
@@ -6,7 +7,7 @@ const {
   BORROWING_STATUS,
 } = require('../utils/constant');
 
-exports.createBorrowingSchema = z.object({
+const baseBorrowingSchema = z.object({
   userId: z.number(),
   name: z.string(),
   email: z.string().email(),
@@ -27,4 +28,22 @@ exports.createBorrowingSchema = z.object({
     .default(BORROWING_STATUS.PENDING),
 });
 
-exports.updateBorrowingSchema = this.createBorrowingSchema.partial();
+exports.createBorrowingSchema = baseBorrowingSchema.superRefine((data, ctx) => {
+  if (dayjs().isAfter(data.borrowingTimeUntil)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'borrowingTimeUntil must be greater than current date',
+    });
+  }
+
+  if (dayjs(data.borrowingTimeUntil).isBefore(data.borrowingTime)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'borrowingTimeUntil must be greater than borrowingTime',
+    });
+  }
+
+  return data;
+});
+
+exports.updateBorrowingSchema = baseBorrowingSchema.partial();

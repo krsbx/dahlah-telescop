@@ -1,9 +1,9 @@
 import {
+  Select as ChakraSelect,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Select as ChakraSelect,
   Text,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,16 +11,15 @@ import { Select } from 'chakra-react-select';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
 import { createBorrowing } from '../../../api/borrowings';
+import { uploadFile } from '../../../api/files';
 import { listUser } from '../../../api/users';
 import BorrowForm from '../../../components/form/borrow';
 import AdminLayout from '../../../layout/admin-layout';
 import useAuthStore from '../../../store/auth';
 import useUsersStore from '../../../store/users';
-import { borrowTelescopeSchema } from '../../../validations/borrow';
 import { BORROWING_STATUS, BORROWING_STATUSES } from '../../../utils/constant';
-import { uploadFile } from '../../../api/files';
+import { createBorrowTelescopeSchema } from '../../../validations/borrow';
 
 function AddBorrow() {
   const navigation = useNavigate();
@@ -57,15 +56,7 @@ function AddBorrow() {
         status: BORROWING_STATUS.PENDING,
       },
       mode: 'onBlur',
-      resolver: zodResolver(
-        borrowTelescopeSchema.extend({
-          user: z.object({
-            label: z.string(),
-            value: z.coerce.number(),
-          }),
-          status: z.enum(BORROWING_STATUSES.map((status) => status.value)),
-        })
-      ),
+      resolver: zodResolver(createBorrowTelescopeSchema),
     });
 
   const values = watch();
