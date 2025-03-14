@@ -155,7 +155,11 @@ function Borrows() {
               row.role,
           },
           {
-            name: 'Action',
+            name: (
+              <Text fontSize={'sm'} fontWeight={'bold'}>
+                Action
+              </Text>
+            ),
             cell: (row) => (
               <Flex gap={2}>
                 <Button

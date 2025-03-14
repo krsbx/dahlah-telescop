@@ -1,80 +1,13 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Grid,
-  GridItem,
-  Input,
-  Select,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
-import { IoClose } from 'react-icons/io5';
-import React, { useCallback, useRef } from 'react';
+import { Flex, Text } from '@chakra-ui/react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { borrowTelescopeSchema } from '../../validations/borrow';
 import MainLayout from '../../layout/main-layout';
-import {
-  OBSERVATION_OBJECT,
-  OCCUPATION,
-  TELESCOPE_TYPE,
-} from '../../utils/constant';
 import { uploadFile } from '../../api/files';
 import { createBorrowing } from '../../api/borrowings';
 import useAuthStore from '../../store/auth';
-
-function FileInput({ name, value, onFileChange, onRemove, disabled }) {
-  const ref = useRef();
-
-  const onClick = useCallback(() => {
-    ref.current.click();
-  }, []);
-
-  return (
-    <Box>
-      <Input
-        onChange={onFileChange}
-        name={name}
-        accept={'application/pdf,application/doc,application/docx'}
-        type="file"
-        hidden
-        ref={ref}
-      />
-      {value ? (
-        <Box
-          px={3}
-          py={2}
-          borderRadius={'md'}
-          border="1px"
-          borderColor="gray.200"
-          w={'100%'}
-          position={'relative'}
-        >
-          {value.name}
-          <Button
-            variant={'ghost'}
-            onClick={onRemove(name)}
-            position={'absolute'}
-            disabled={disabled}
-            right={0}
-            top={0}
-            p={1}
-          >
-            <IoClose />
-          </Button>
-        </Box>
-      ) : (
-        <Button w={'100%'} onClick={onClick} disabled={disabled}>
-          Upload
-        </Button>
-      )}
-    </Box>
-  );
-}
+import BorrowForm from '../../components/form/borrow';
 
 function BorrowTelescope() {
   const { auth } = useAuthStore();
@@ -110,7 +43,7 @@ function BorrowTelescope() {
     [setValue]
   );
 
-  const onRemove = useCallback(
+  const onFileRemove = useCallback(
     (name) => () => {
       setValue(name, '');
     },
@@ -150,238 +83,15 @@ function BorrowTelescope() {
         <Text fontWeight={'bold'} textTransform={'uppercase'} fontSize={'xl'}>
           Peminjaman Teleskop
         </Text>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={4} w={'100%'} px={2}>
-            <FormControl isRequired isInvalid={!!formState.errors.name}>
-              <FormLabel>Nama Peminjaman</FormLabel>
-              <Input
-                placeholder="Masukkan Nama Peminjam"
-                {...register('name')}
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.name?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!formState.errors.email}>
-              <FormLabel>Email</FormLabel>
-              <Input
-                placeholder="Masukkan Email"
-                {...register('email')}
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.email?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!formState.errors.nimNip}>
-              <FormLabel>NIM/NIP</FormLabel>
-              <Input
-                placeholder="Masukkan NIM/NIP"
-                {...register('nimNip')}
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.nimNip?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!formState.errors.occupation}>
-              <FormLabel>Status/Pekerjaan</FormLabel>
-              <Select
-                {...register('occupation')}
-                placeholder="Pilih Status/Pekerjaan"
-                disabled={formState.isSubmitting}
-              >
-                {OCCUPATION.map((oc) => (
-                  <option value={oc.value} key={`${oc.value}-${oc.title}`}>
-                    {oc.title}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>
-                {formState.errors.occupation?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl
-              isRequired
-              isInvalid={!!formState.errors.observationObject}
-            >
-              <FormLabel>Objek Penelitian</FormLabel>
-              <Select
-                {...register('observationObject')}
-                placeholder="Pilih Objek Penelitian"
-                disabled={formState.isSubmitting}
-              >
-                {OBSERVATION_OBJECT.map((oo) => (
-                  <option value={oo.value} key={`${oo.value}-${oo.title}`}>
-                    {oo.title}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>
-                {formState.errors.observationObject?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl
-              isRequired
-              isInvalid={!!formState.errors.rightAscescion}
-            >
-              <FormLabel>Asensio Rekta / Right Ascension</FormLabel>
-              <Input
-                {...register('rightAscescion')}
-                placeholder="Masukkan Asensio Rekta"
-                type="number"
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.rightAscescion?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!formState.errors.declination}>
-              <FormLabel>Deklinasi / Declination</FormLabel>
-              <Input
-                {...register('declination')}
-                placeholder="Masukkan Deklinasi / Declination"
-                type="number"
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.declination?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!formState.errors.objectType}>
-              <FormLabel>Jenis Objek Pengamatan</FormLabel>
-              <Input
-                {...register('objectType')}
-                placeholder="Masukkan Jenis Objek Pengamatan"
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.objectType?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!formState.errors.magnitude}>
-              <FormLabel>Magnitude</FormLabel>
-              <Input
-                {...register('magnitude')}
-                placeholder="Masukkan Magnitude"
-                type="number"
-                disabled={formState.isSubmitting}
-              />
-              <FormErrorMessage>
-                {formState.errors.magnitude?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl
-              isRequired
-              isInvalid={!!formState.errors.telescopeType}
-            >
-              <FormLabel>Teleskop / Telescope</FormLabel>
-              <Select
-                {...register('telescopeType')}
-                placeholder="Pilih Teleskop / Telescope"
-                disabled={formState.isSubmitting}
-              >
-                {TELESCOPE_TYPE.map((tt) => (
-                  <option value={tt.value} key={`${tt.value}-${tt.title}`}>
-                    {tt.title}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>
-                {formState.errors.telescopeType?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <Grid templateColumns={'repeat(2, 1fr)'} columnGap={4}>
-              <GridItem>
-                <FormControl
-                  isRequired
-                  isInvalid={!!formState.errors.borrowingTime}
-                >
-                  <FormLabel>Waktu Peminjaman</FormLabel>
-                  <Input
-                    {...register('borrowingTime')}
-                    placeholder="Pilih Waktu Peminjaman"
-                    type="datetime-local"
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.borrowingTime?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </GridItem>
-
-              <GridItem>
-                <FormControl
-                  isRequired
-                  isInvalid={!!formState.errors.borrowingTimeUntil}
-                >
-                  <FormLabel>Waktu Selesai Peminjaman</FormLabel>
-                  <Input
-                    {...register('borrowingTimeUntil')}
-                    placeholder="Pilih Waktu Peminjaman"
-                    type="datetime-local"
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.borrowingTimeUntil?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </GridItem>
-            </Grid>
-
-            <Grid templateColumns={'repeat(2, 1fr)'} columnGap={4}>
-              <GridItem>
-                <FormControl isRequired isInvalid={!!formState.errors.proposal}>
-                  <FormLabel>Upload Proposal</FormLabel>
-                  <FileInput
-                    value={values.proposal?.[0]}
-                    onFileChange={onFileChange}
-                    onRemove={onRemove}
-                    name="proposal"
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.proposal?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </GridItem>
-
-              <GridItem>
-                <FormControl
-                  isRequired
-                  isInvalid={!!formState.errors.introductory}
-                >
-                  <FormLabel>Upload Surat Pengantar</FormLabel>
-                  <FileInput
-                    value={values.introductory?.[0]}
-                    onFileChange={onFileChange}
-                    onRemove={onRemove}
-                    name="introductory"
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.introductory?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </GridItem>
-            </Grid>
-
-            <Button w={'100%'} type="submit">
-              Submit
-            </Button>
-          </Stack>
-        </form>
+        <BorrowForm
+          errors={formState.errors}
+          formState={formState}
+          onFileChange={onFileChange}
+          onFileRemove={onFileRemove}
+          onSubmit={handleSubmit(onSubmit)}
+          register={register}
+          values={values}
+        />
       </Flex>
     </MainLayout>
   );

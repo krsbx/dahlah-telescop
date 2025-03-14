@@ -109,7 +109,7 @@ function Accounts() {
                 </Button>
               )}
             </Flex>
-            <Button fontSize={'xs'} onClick={() => navigation('add  ')}>
+            <Button fontSize={'xs'} onClick={() => navigation('add')}>
               Tambah Akun
             </Button>
           </Flex>
@@ -150,7 +150,11 @@ function Accounts() {
               row.role,
           },
           {
-            name: 'Action',
+            name: (
+              <Text fontSize={'sm'} fontWeight={'bold'}>
+                Action
+              </Text>
+            ),
             cell: (row) => (
               <Flex gap={2}>
                 <Button
