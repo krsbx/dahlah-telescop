@@ -50,7 +50,7 @@ function AddAccount() {
   );
 
   return (
-    <AdminLayout title={'Add Account'}>
+    <AdminLayout title={'Tambah Akun'}>
       <Flex
         alignItems={'center'}
         justifyContent={'center'}

@@ -93,7 +93,7 @@ function Borrows() {
   }, []);
 
   return (
-    <AdminLayout title={'Borrows'}>
+    <AdminLayout title={'Peminjaman'}>
       <DataTable
         data={filteredBorrowings}
         actions={

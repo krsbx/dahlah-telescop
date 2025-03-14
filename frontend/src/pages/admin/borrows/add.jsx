@@ -126,7 +126,7 @@ function AddBorrow() {
   }, []);
 
   return (
-    <AdminLayout title={'Add Borrow'}>
+    <AdminLayout title={'Tambah Peminjaman'}>
       <Flex
         alignItems={'center'}
         justifyContent={'center'}
