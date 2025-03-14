@@ -59,10 +59,9 @@ class Mega {
   async onReady() {
     Logger.info('Mega connected!');
 
-    const sortedFiles = _.sortBy(
-      this.storage.files,
-      (a, b) => b?.createdAt ?? 0 - (a?.createdAt ?? 0)
-    ).filter((file) => /^(\d{4}-\d{2}-\d{2})(\.txt)$/.test(file.name));
+    const sortedFiles = _.filter(this.storage.files, (file) =>
+      /^(\d{4}-\d{2}-\d{2})(\.txt)$/.test(file.name)
+    ).sort((a, b) => dayjs(b.name.replace('.txt', '')) - dayjs(a.name.replace('.txt', '')));
 
     if (!sortedFiles?.[0]) return;
 
