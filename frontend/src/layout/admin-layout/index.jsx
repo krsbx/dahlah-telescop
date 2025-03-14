@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Flex, Stack, Text } from '@chakra-ui/react';
 import React, { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/auth';
+import { USER_ROLE } from '../../utils/constant';
 import AdminLink from './admin-link';
 
 function AdminLayout({ children, title }) {
@@ -16,7 +17,7 @@ function AdminLayout({ children, title }) {
   }, [removeToken, navigation]);
 
   useEffect(() => {
-    if (token && auth) return;
+    if (token && auth && auth.role === USER_ROLE.ADMIN) return;
 
     return navigation('/', {
       replace: true,
