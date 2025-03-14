@@ -8,10 +8,11 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-function SignUpForm({ onSubmit, errors, register, formState, children }) {
+/** @param {Parameters<typeof Stack>[0]} props */
+function SignUpForm({ onSubmit, errors, register, formState, children, ...props }) {
   return (
     <form onSubmit={onSubmit}>
-      <Stack spacing={4} w={'100%'} px={2}>
+      <Stack spacing={4} w={'100%'} px={2} {...props}>
         <FormControl isRequired isInvalid={!!errors.fullName}>
           <FormLabel>Nama Lengkap</FormLabel>
           <Input

@@ -4,6 +4,8 @@ import BorrowTelescope from './pages/borrow';
 import BorrowTelescopeSchedule from './pages/borrow/schedule';
 import Accounts from './pages/admin/accounts';
 import Borrows from './pages/admin/borrows';
+import AddAccount from './pages/admin/accounts/add';
+import AddBorrow from './pages/admin/borrows/add';
 
 const router = createBrowserRouter([
   // Missing
@@ -30,7 +32,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'admin/accounts/add',
-    element: null,
+    element: <AddAccount />,
   },
   {
     path: 'admin/accounts/edit/:userId',
@@ -43,7 +45,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'admin/borrows/add',
-    element: null,
+    element: <AddBorrow />,
   },
   {
     path: 'admin/borrows/edit/:borrowingId',

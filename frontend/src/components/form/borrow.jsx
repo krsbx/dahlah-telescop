@@ -17,6 +17,7 @@ import {
 } from '../../utils/constant';
 import FileInput from '../file-input';
 
+/** @param {Parameters<typeof Stack>[0]} props */
 function BorrowForm({
   onSubmit,
   errors,
@@ -26,12 +27,13 @@ function BorrowForm({
   values,
   onFileChange,
   onFileRemove,
+  ...props
 }) {
   return (
     <form onSubmit={onSubmit}>
-      <Stack spacing={4} w={'100%'} px={2}>
+      <Stack spacing={4} w={'100%'} px={2} {...props}>
         <FormControl isRequired isInvalid={!!errors.name}>
-          <FormLabel>Nama Peminjaman</FormLabel>
+          <FormLabel>Nama Peminjam</FormLabel>
           <Input
             placeholder="Masukkan Nama Peminjam"
             {...register('name')}
