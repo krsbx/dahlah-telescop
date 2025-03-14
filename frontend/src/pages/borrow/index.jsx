@@ -16,16 +16,16 @@ import { IoClose } from 'react-icons/io5';
 import React, { useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { borrowTelescopeSchema } from '../validations/borrow';
-import MainLayout from '../layout/main-layout';
+import { borrowTelescopeSchema } from '../../validations/borrow';
+import MainLayout from '../../layout/main-layout';
 import {
   OBSERVATION_OBJECT,
   OCCUPATION,
   TELESCOPE_TYPE,
-} from '../utils/constant';
-import { uploadFile } from '../api/files';
-import { createBorrowing } from '../api/borrowings';
-import useAuthStore from '../store/auth';
+} from '../../utils/constant';
+import { uploadFile } from '../../api/files';
+import { createBorrowing } from '../../api/borrowings';
+import useAuthStore from '../../store/auth';
 
 function FileInput({ name, value, onFileChange, onRemove, disabled }) {
   const ref = useRef();
