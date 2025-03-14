@@ -1,25 +1,20 @@
 import {
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   Heading,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
   useDisclosure,
-  useModal,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { signUpSchema } from '../../validations/auth';
 import { register as registerUser } from '../../api/auth';
+import $SignUpForm from '../form/sign-up';
 
 function SignUpForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -80,50 +75,12 @@ function SignUpForm() {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack spacing={4} w={'100%'} px={2}>
-                <FormControl isRequired isInvalid={!!formState.errors.fullName}>
-                  <FormLabel>Nama Lengkap</FormLabel>
-                  <Input
-                    placeholder="Masukkan Nama Lengkap"
-                    {...register('fullName')}
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.fullName?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl isRequired isInvalid={!!formState.errors.email}>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    placeholder="Masukkan Email"
-                    {...register('email')}
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.email?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl isRequired isInvalid={!!formState.errors.password}>
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    placeholder="Masukkan Password"
-                    {...register('password')}
-                    disabled={formState.isSubmitting}
-                    type="password"
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.password?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <Button w={'100%'} type="submit">
-                  Submit
-                </Button>
-              </Stack>
-            </form>
+            <$SignUpForm
+              errors={formState.errors}
+              onSubmit={handleSubmit(onSubmit)}
+              register={register}
+              formState={formState}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -1,27 +1,22 @@
 import {
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   Heading,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Select,
-  Stack,
   useDisclosure,
 } from '@chakra-ui/react';
 import React, { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '../../validations/auth';
-import { USER_ROLE, USER_ROLES } from '../../utils/constant';
+import { USER_ROLE } from '../../utils/constant';
 import { login } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
+import $SignInForm from '../form/sign-in';
 
 function SignInForm() {
   const navigation = useNavigate();
@@ -100,56 +95,12 @@ function SignInForm() {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack spacing={4} w={'100%'} px={2}>
-                <FormControl isRequired isInvalid={!!formState.errors.email}>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    placeholder="Masukkan Email"
-                    {...register('email')}
-                    disabled={formState.isSubmitting}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.email?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl isRequired isInvalid={!!formState.errors.password}>
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    placeholder="Masukkan Password"
-                    {...register('password')}
-                    disabled={formState.isSubmitting}
-                    type="password"
-                  />
-                  <FormErrorMessage>
-                    {formState.errors.password?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl isRequired isInvalid={!!formState.errors.role}>
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    placeholder="Masukkan Role"
-                    {...register('role')}
-                    disabled={formState.isSubmitting}
-                  >
-                    {USER_ROLES.map((ur) => (
-                      <option value={ur.value} key={`${ur.value}-${ur.title}`}>
-                        {ur.title}
-                      </option>
-                    ))}
-                  </Select>
-                  <FormErrorMessage>
-                    {formState.errors.role?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <Button w={'100%'} type="submit">
-                  Submit
-                </Button>
-              </Stack>
-            </form>
+            <$SignInForm
+              onSubmit={handleSubmit(onSubmit)}
+              errors={formState.errors}
+              register={register}
+              formState={formState}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

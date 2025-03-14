@@ -1,12 +1,9 @@
 import {
   Avatar,
   Box,
-  Center,
   Flex,
-  Spacer,
   Stack,
   Text,
-  WrapItem,
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import useAuthStore from '../store/auth';
@@ -27,42 +24,40 @@ function AdminLayout({ children, title }) {
 
   return (
     <Stack h={'100vh'} w={'100vw'}>
+      <Flex
+        bg={'blue.700'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        w={'calc(100vw - 12.5rem)'}
+        right={0}
+        h={'4rem'}
+        position={'fixed'}
+        zIndex={999}
+        px={3}
+      >
+        <Text
+          color={'white'}
+          fontWeight={'bold'}
+          fontSize={'xl'}
+          textAlign={'right'}
+        >
+          {title}
+        </Text>
+      </Flex>
       <Box position={'fixed'} w={'full'}>
         <Flex
+          justifyContent={'center'}
+          w={'12.5rem'}
           bg={'blue.700'}
-          justifyContent={'flex-end'}
-          alignItems={'center'}
-          w={'full'}
-          h={'4rem'}
-          px={3}
-        >
-          <Text
-            color={'white'}
-            fontWeight={'bold'}
-            fontSize={'xl'}
-            textAlign={'right'}
-          >
-            {title}
-          </Text>
-        </Flex>
-        <Flex
-          bg={'blue.700'}
+          h={'100vh'}
           px={2}
           py={5}
-          w={'12.5rem'}
-          h={'100vh'}
-          justifyContent={'center'}
+          pt={16}
         >
           <Avatar size={'2xl'} />
         </Flex>
       </Box>
-      <Box
-        pl={'12.5rem'}
-        pt={'4rem'}
-        h={'calc(100vh - 4rem)'}
-        w={'100%'}
-        overflow={'auto'}
-      >
+      <Box pl={'12.5rem'} pt={'4rem'} h={'100%'} w={'100%'}>
         {children}
       </Box>
     </Stack>
