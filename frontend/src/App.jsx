@@ -1,11 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './pages/home';
+import Accounts from './pages/admin/accounts';
+import AddAccount from './pages/admin/accounts/add';
+import EditAccount from './pages/admin/accounts/edit';
+import Borrows from './pages/admin/borrows';
+import AddBorrow from './pages/admin/borrows/add';
+import EditBorrow from './pages/admin/borrows/edit';
 import BorrowTelescope from './pages/borrow';
 import BorrowTelescopeSchedule from './pages/borrow/schedule';
-import Accounts from './pages/admin/accounts';
-import Borrows from './pages/admin/borrows';
-import AddAccount from './pages/admin/accounts/add';
-import AddBorrow from './pages/admin/borrows/add';
+import Home from './pages/home';
 
 const router = createBrowserRouter([
   // Missing
@@ -36,7 +38,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'admin/accounts/edit/:userId',
-    element: null,
+    element: <EditAccount />,
   },
 
   {
@@ -49,9 +51,10 @@ const router = createBrowserRouter([
   },
   {
     path: 'admin/borrows/edit/:borrowingId',
-    element: null,
+    element: <EditBorrow />,
   },
 ]);
+
 function App() {
   return <RouterProvider router={router} />;
 }

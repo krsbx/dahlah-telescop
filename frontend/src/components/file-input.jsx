@@ -2,7 +2,14 @@ import { Box, Button, Input } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
 import { IoClose } from 'react-icons/io5';
 
-function FileInput({ name, value, onFileChange, onRemove, disabled }) {
+function FileInput({
+  name,
+  value,
+  onFileChange,
+  onRemove,
+  disabled,
+  required = true,
+}) {
   const ref = useRef();
 
   const onClick = useCallback(() => {
@@ -15,9 +22,11 @@ function FileInput({ name, value, onFileChange, onRemove, disabled }) {
         onChange={onFileChange}
         name={name}
         accept={'application/pdf,application/doc,application/docx'}
+        isRequired={value ? false : required}
+        required={value ? false : required}
         type="file"
-        hidden
         ref={ref}
+        hidden
       />
       {value ? (
         <Box

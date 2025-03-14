@@ -18,7 +18,7 @@ import {
 } from '../../utils/constant';
 import FileInput from '../file-input';
 
-/** @param {Parameters<typeof Stack>[0]} props */
+/** @param {Parameters<typeof Stack>[0] & { proposalRequired?: boolean; introductoryRequired?: boolean }} props */
 function BorrowForm({
   onSubmit,
   errors,
@@ -28,6 +28,8 @@ function BorrowForm({
   values,
   onFileChange,
   onFileRemove,
+  proposalRequired,
+  introductoryRequired,
   ...props
 }) {
   return (

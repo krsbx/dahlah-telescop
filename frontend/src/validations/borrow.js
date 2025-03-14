@@ -26,30 +26,42 @@ const baseBorrowTelescopeSchema = z.object({
 });
 
 /**
- * @param {z.infer<typeof baseBorrowTelescopeSchema>} data
- * @param {z.RefinementCtx} ctx
+ * @param {boolean} allowPassing
  * @returns
  */
-export function borrowTelescopeRefiner(data, ctx) {
-  if (dayjs().isAfter(data.borrowingTimeUntil)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'borrowingTimeUntil must be greater than current date',
-    });
-  }
+export function borrowTelescopeRefiner(allowPassing) {
+  /**
+   * @param {z.infer<typeof baseBorrowTelescopeSchema>} data
+   * @param {z.RefinementCtx} ctx
+   * @returns {z.infer<typeof baseBorrowTelescopeSchema>}
+   */
+  return function (data, ctx) {
+    if (data.borrowingTimeUntil && dayjs().isAfter(data.borrowingTimeUntil)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'borrowingTimeUntil must be greater than current date',
+      });
+    }
 
-  if (dayjs(data.borrowingTimeUntil).isBefore(data.borrowingTime)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'borrowingTimeUntil must be greater than borrowingTime',
-    });
-  }
+    if (!allowPassing) {
+      if (
+        data.borrowingTimeUntil &&
+        data.borrowingTime &&
+        dayjs(data.borrowingTimeUntil).isBefore(data.borrowingTime)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'borrowingTimeUntil must be greater than borrowingTime',
+        });
+      }
+    }
 
-  return data;
+    return data;
+  };
 }
 
 export const borrowTelescopeSchema = baseBorrowTelescopeSchema.superRefine(
-  borrowTelescopeRefiner
+  borrowTelescopeRefiner(false)
 );
 
 export const createBorrowTelescopeSchema = baseBorrowTelescopeSchema
@@ -60,4 +72,15 @@ export const createBorrowTelescopeSchema = baseBorrowTelescopeSchema
     }),
     status: z.enum(BORROWING_STATUSES.map((status) => status.value)),
   })
-  .superRefine(borrowTelescopeRefiner);
+  .superRefine(borrowTelescopeRefiner(false));
+
+export const updateBorrowTelescopeSchema = baseBorrowTelescopeSchema
+  .extend({
+    user: z.object({
+      label: z.string(),
+      value: z.coerce.number(),
+    }),
+    status: z.enum(BORROWING_STATUSES.map((status) => status.value)),
+  })
+  .partial()
+  .superRefine(borrowTelescopeRefiner(true));
