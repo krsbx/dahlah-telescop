@@ -17,6 +17,7 @@ import useStatsStore from '../store/stats';
 import { avgStatsByHour, groupStatsByHour } from '../utils/charts';
 import { CHARTS_OPTIONS } from '../utils/constant';
 import dayjs from 'dayjs';
+import DownloadAws from '../components/download-aws';
 
 ChartJS.register(
   CategoryScale,
@@ -98,6 +99,7 @@ function Home() {
           />
         )}
       </Flex>
+      <DownloadAws />
     </Flex>
   );
 }

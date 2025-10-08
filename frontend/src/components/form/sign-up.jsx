@@ -45,7 +45,10 @@ function SignUpForm({
           <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isRequired={!isPasswordOptional} isInvalid={!!errors.password}>
+        <FormControl
+          isRequired={!isPasswordOptional}
+          isInvalid={!!errors.password}
+        >
           <FormLabel>Password</FormLabel>
           <Flex position={'relative'}>
             <Input
@@ -72,7 +75,12 @@ function SignUpForm({
 
         {children}
 
-        <Button w={'100%'} type="submit">
+        <Button
+          w={'100%'}
+          type="submit"
+          isLoading={formState.isSubmitting}
+          disabled={formState.isSubmitting}
+        >
           Submit
         </Button>
       </Stack>

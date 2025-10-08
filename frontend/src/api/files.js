@@ -39,3 +39,26 @@ export const getFile = async (url) => {
 
   return file;
 };
+
+/**
+ * @param {string} startDate
+ * @param {string} endDate
+ * @returns {Promise<File>}
+ */
+export const getAws = async (startDate, endDate) => {
+  const { data } = await axios.get('/files/', {
+    responseType: 'blob',
+    params: {
+      startDate,
+      endDate
+    }
+  });
+
+  const fileName = [startDate, endDate].filter(Boolean).map(d => dayjs(d).format('YYYY-MM-DD')).join('-') + '.zip';
+
+  const file = new File([data], fileName, {
+    type: data.type,
+  });
+
+  return file;
+};

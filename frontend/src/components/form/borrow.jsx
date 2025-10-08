@@ -226,7 +226,12 @@ function BorrowForm({
 
         {children}
 
-        <Button w={'100%'} type="submit">
+        <Button
+          w={'100%'}
+          type="submit"
+          isLoading={formState.isSubmitting}
+          disabled={formState.isSubmitting}
+        >
           Submit
         </Button>
       </Stack>

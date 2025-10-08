@@ -31,8 +31,8 @@ exports.generateDate = (date, suffix) => {
  * @returns {string}
  */
 exports.generateArchiveName = (date) => {
-  const startDate = dayjs(date.startDate).format('YYYY-MM-DD');
-  const endDate = dayjs(date.endDate).format('YYYY-MM-DD');
+  const fileNames = [date.startDate, date.endDate].filter(Boolean);
+  const fileName = `${fileNames.map((d) => dayjs(d).format('YYYY-MM-DD')).join('-')}.zip`;
 
-  return `${startDate}-${endDate}.zip`;
+  return fileName;
 };
